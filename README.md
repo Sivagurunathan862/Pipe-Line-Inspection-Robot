@@ -1,1 +1,128 @@
 # Pipe-Line-Inspection-Robot
+const int t1 = 13;
+const int e1 = 11;
+const int t2 = 12;
+const int e2 = 10;
+const int t3 = 8;
+const int e3 = 9;
+const int m11 = 7;
+const int m12 = 6;
+const int m21 = 5;
+const int m22 = 4;
+const int b = 3;
+const int led = 1;
+
+int center() {
+  digitalWrite(t1, LOW);
+  delayMicroseconds(2);
+  digitalWrite(t1, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(t1, LOW);
+  float duration = pulseIn(e1, HIGH);
+  float distance = duration * 0.017;
+  return (distance);
+}
+
+int right()
+{
+  digitalWrite(t2, LOW);
+  delayMicroseconds(2);
+  digitalWrite(t2, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(t2, LOW);
+  float duration = pulseIn(e2, HIGH);
+  float distance = duration * 0.017 ;
+  return (distance);
+}
+
+int left()
+{
+  digitalWrite(t3, LOW);
+  delayMicroseconds(2);
+  digitalWrite(t3, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(t3, LOW);
+  float duration = pulseIn(e3, HIGH);
+  float distance = duration * 0.017;
+  return (distance);
+}
+void Stop()
+{
+  digitalWrite(m11, LOW);
+  digitalWrite(m12, LOW);
+  digitalWrite(m21, LOW);
+  digitalWrite(m22, LOW);
+}
+void Forward()
+{
+  digitalWrite(m11, HIGH);
+  digitalWrite(m12, LOW);
+  digitalWrite(m21, HIGH);
+  digitalWrite(m22, LOW);
+}
+void Right()
+{
+  digitalWrite(m11, HIGH);
+  digitalWrite(m12, LOW);
+  digitalWrite(m21, LOW);
+  digitalWrite(m22, LOW);
+}
+void Left()
+{
+  digitalWrite(m11, LOW);
+  digitalWrite(m12, LOW);
+  digitalWrite(m21, HIGH);
+  digitalWrite(m22, LOW);
+}
+
+void setup()
+{
+  pinMode(t1, OUTPUT);
+  pinMode(e1, INPUT);
+  pinMode(t2, OUTPUT);
+  pinMode(e2, INPUT);
+  pinMode(t3, OUTPUT);
+  pinMode(e3, INPUT);
+  pinMode(m11, OUTPUT);
+  pinMode(m12, OUTPUT);
+  pinMode(m21, OUTPUT);
+  pinMode(m22, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop()
+{
+  int center_distance=center();
+  int right_distance=right();
+  int left_distance=left();
+  
+  if (center_distance < 5)
+  {
+    if (right_distance<5 && left_distance<5)
+    {
+      digitalWrite(b, HIGH);
+      digitalWrite(led, HIGH);
+      Stop();
+
+    }
+    else if (right_distance<5 && left_distance>5)
+    {
+      Left();
+      Serial.println("Turning Left");
+    }
+    else if (right_distance>5 && left_distance<5)
+    {
+      Right();
+      Serial.println("Turning Right");
+    }
+    else if (right_distance>=5 && left_distance>=5)
+    {
+      Left();
+      Serial.println("Turning Left");
+
+    }
+  }
+  else if (distance > 5)
+    Forward();
+  Serial.println("Moving Forward");
+}
